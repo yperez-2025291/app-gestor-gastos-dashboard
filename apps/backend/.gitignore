@@ -1,0 +1,32 @@
+# Node & Monorepo Dependencies
+node_modules/
+.pnpm-store/
+
+# TypeScript Build Output
+/dist
+/build
+
+# Prisma & Database
+# Ignora archivos SQLite o volcados locales si aplicara
+*.db
+*.sqlite
+*.sqlite-journal
+
+# Environment Variables (SÚPER IMPORTANTE: nunca subir contraseñas ni secretos JWT)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDEs & Operating System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

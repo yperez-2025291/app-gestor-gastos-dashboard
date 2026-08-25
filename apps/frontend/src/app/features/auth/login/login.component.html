@@ -1,0 +1,57 @@
+<div class="login-container">
+  <div class="brand-section">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="brand-content">
+      <div class="logo-badge">
+        <span class="logo-icon"></span>
+        <span class="logo-text">GastosApp</span>
+      </div>
+      <h1>Control Financiero Inteligente</h1>
+      <p>Visualiza, gestiona y optimiza tus finanzas personales con nuestro panel de análisis en tiempo real.</p>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <app-card [glass]="true">
+      <div class="form-header">
+        <h2>Bienvenido de nuevo</h2>
+        <p>Ingresa tus datos para acceder a tu cuenta</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <app-input
+          label="Correo Electrónico"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          formControlName="email"
+          [errorMessage]="getFieldError('email')">
+        </app-input>
+
+        <app-input
+          label="Contraseña"
+          type="password"
+          placeholder="••••••••"
+          formControlName="password"
+          [errorMessage]="getFieldError('password')">
+        </app-input>
+
+        <app-button
+          type="submit"
+          variant="primary"
+          [isLoading]="isLoading"
+          [disabled]="loginForm.invalid">
+          Iniciar Sesión
+        </app-button>
+      </form>
+
+      <div class="form-footer">
+        <p>¿No tienes una cuenta? <a routerLink="/register" class="link">Regístrate aquí</a></p>
+      </div>
+    </app-card>
+  </div>
+</div>

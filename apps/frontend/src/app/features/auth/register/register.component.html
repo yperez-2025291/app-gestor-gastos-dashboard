@@ -1,0 +1,65 @@
+<div class="register-container">
+  <div class="brand-section">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="brand-content">
+      <div class="logo-badge">
+        <span class="logo-icon"></span>
+        <span class="logo-text">GastosApp</span>
+      </div>
+      <h1>Empieza a gestionar tus finanzas</h1>
+      <p>Crea tu cuenta en pocos segundos y toma el control absoluto de tu capital con análisis detallados.</p>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <app-card [glass]="true">
+      <div class="form-header">
+        <h2>Crear una cuenta</h2>
+        <p>Ingresa tus datos para registrarte en la plataforma</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <app-input
+          label="Nombre Completo"
+          type="text"
+          placeholder="Tu Nombre"
+          formControlName="name"
+          [errorMessage]="getFieldError('name')">
+        </app-input>
+
+        <app-input
+          label="Correo Electrónico"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          formControlName="email"
+          [errorMessage]="getFieldError('email')">
+        </app-input>
+
+        <app-input
+          label="Contraseña"
+          type="password"
+          placeholder="••••••••"
+          formControlName="password"
+          [errorMessage]="getFieldError('password')">
+        </app-input>
+
+        <app-button
+          type="submit"
+          variant="primary"
+          [isLoading]="isLoading"
+          [disabled]="registerForm.invalid">
+          Registrarse
+        </app-button>
+      </form>
+
+      <div class="form-footer">
+        <p>¿Ya tienes una cuenta? <a routerLink="/login" class="link">Inicia sesión</a></p>
+      </div>
+    </app-card>
+  </div>
+</div>
