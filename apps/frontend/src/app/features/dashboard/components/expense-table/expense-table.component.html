@@ -1,0 +1,31 @@
+<div class="expense-table-container">
+  <!-- Bloque 1: Titular destacado -->
+  <div class="table-header-card">
+    <h2>Registro de últimos gastos</h2>
+  </div>
+
+  <!-- Bloque 2: Contenedor de la tabla -->
+  <div class="table-body-card">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let gasto of gastos">
+          <td>{{ gasto.concepto }}</td>
+          <td>{{ gasto.categoria }}</td>
+          <td>{{ gasto.fecha }}</td>
+          <td class="monto">-{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</td>
+        </tr>
+        <tr *ngIf="gastos.length === 0">
+          <td colspan="4" class="empty-state">No hay gastos registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

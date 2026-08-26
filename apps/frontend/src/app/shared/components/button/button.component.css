@@ -1,0 +1,48 @@
+.custom-btn {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.custom-btn:active {
+  transform: scale(0.98);
+}
+
+.custom-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Variantes de color */
+.custom-btn.primary {
+  background-color: #4d3f61;
+  color: #ffffff;
+}
+
+.custom-btn.primary:hover {
+  background-color: #3b3b3b;
+}
+
+.custom-btn.secondary {
+  background-color: #e3e3e3;
+  color: #3b3b3b;
+}
+
+.custom-btn.secondary:hover {
+  background-color: #ffffff;
+}
+
+.custom-btn.danger {
+  background-color: #84749f;
+  color: #ffffff;
+}
+
+.custom-btn.danger:hover {
+  background-color: #4d3f61;
+}

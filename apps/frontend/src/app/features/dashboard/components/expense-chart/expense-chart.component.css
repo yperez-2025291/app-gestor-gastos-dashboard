@@ -1,0 +1,20 @@
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.pie-chart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ffc0d3 0deg 30deg,
+    #84749f 30deg 80deg,
+    #ff7070 80deg 140deg,
+    #d4ff80 140deg 230deg,
+    #ffc848 230deg 360deg
+  );
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

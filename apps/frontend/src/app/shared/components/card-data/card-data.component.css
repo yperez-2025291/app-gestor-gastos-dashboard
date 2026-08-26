@@ -1,0 +1,24 @@
+.card-data {
+  background-color: #84749f;
+  border-radius: 16px;
+  padding: 20px 24px;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-data .card-title {
+  color: #3b3b3b;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.card-data .card-amount {
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 10px 0 0 0;
+}

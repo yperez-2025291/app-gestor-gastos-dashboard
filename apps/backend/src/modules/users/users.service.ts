@@ -58,7 +58,7 @@ export class UsersService {
     const secret = process.env.JWT_SECRET || 'fallback_secret';
 
     const signOptions: jwt.SignOptions = {
-      expiresIn: (process.env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn']) || '1d',
+      expiresIn: (process.env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn']) || '1m',
     };
 
     const token = jwt.sign(

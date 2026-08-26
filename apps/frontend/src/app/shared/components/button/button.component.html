@@ -1,0 +1,7 @@
+<button 
+  class="custom-btn" 
+  [ngClass]="variant" 
+  [disabled]="disabled || isLoading" 
+  (click)="onClick()">
+  {{ isLoading ? 'Cargando...' : label }}
+</button>

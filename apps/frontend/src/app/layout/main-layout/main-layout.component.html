@@ -1,0 +1,14 @@
+<app-header></app-header>
+
+<div class="main-layout">
+  <app-sidebar></app-sidebar>
+  <main class="content-area">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<app-session-expired-modal
+  [isVisible]="showSessionModal"
+  (onLoginAgain)="handleLoginAgain()"
+  (onCancel)="handleCancel()">
+</app-session-expired-modal>

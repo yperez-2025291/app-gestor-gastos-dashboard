@@ -1,0 +1,62 @@
+.expense-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Bloque 1: Encabezado */
+.table-header-card {
+  background-color: #4d3f61;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-header-card h2 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Bloque 2: Cuerpo de la Tabla */
+.table-body-card {
+  background-color: #e3e3e3;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 200px;
+  border: 1px solid #b3a7c8;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.custom-table th {
+  color: #3b3b3b;
+  font-weight: 700;
+  padding: 12px 8px;
+  border-bottom: 2px solid #b3a7c8;
+}
+
+.custom-table td {
+  padding: 12px 8px;
+  color: #3b3b3b;
+  border-bottom: 1px solid #b3a7c8;
+  font-size: 0.95rem;
+}
+
+.custom-table td.monto {
+  font-weight: 700;
+  color: #4d3f61;
+}
+
+.empty-state {
+  text-align: center;
+  color: #84749f;
+  padding: 24px 0;
+}

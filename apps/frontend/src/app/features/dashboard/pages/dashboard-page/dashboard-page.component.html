@@ -1,0 +1,25 @@
+<div class="dashboard-grid">
+  <!-- Sección Superior: Tarjetas + Gráfica -->
+  <div class="top-section">
+    <div class="cards-column">
+      <div class="cards-row">
+        <app-card-data title="MAYOR GASTADO" [amount]="mayorGastado"></app-card-data>
+        <app-card-data title="TOTAL GASTADO" [amount]="totalGastado"></app-card-data>
+      </div>
+      <div class="cards-row single">
+        <app-card-data title="PRESUPUESTO RESTANTE" [amount]="presupuestoRestante"></app-card-data>
+      </div>
+    </div>
+
+    <div class="chart-column">
+      <app-expense-chart></app-expense-chart>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Sección Inferior: Tabla de Gastos -->
+  <div class="bottom-section">
+    <app-expense-table [gastos]="ultimosGastos"></app-expense-table>
+  </div>
+</div>

@@ -1,17 +1,18 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { TokenStorageService } from '../services/token-storage.service';
+import { catchError, throwError } from 'rxjs';
+import { SessionStatusService } from '../services/session-status.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenStorage = inject(TokenStorageService);
-  const token = tokenStorage.getToken();
+  const sessionStatusService = inject(SessionStatusService);
 
-  if (token) {
-    const clonedReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
-    });
-    return next(clonedReq);
-  }
-
-  return next(req);
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        // Dispara el modal en la pantalla
+        sessionStatusService.notifyExpired();
+      }
+      return throwError(() => error);
+    })
+  );
 };
