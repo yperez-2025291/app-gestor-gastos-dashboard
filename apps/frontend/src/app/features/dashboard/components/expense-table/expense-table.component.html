@@ -20,7 +20,7 @@
           <td>{{ gasto.concepto }}</td>
           <td>{{ gasto.categoria }}</td>
           <td>{{ gasto.fecha }}</td>
-          <td class="monto">-{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</td>
+          <td class="monto">-{{ gasto.monto | currency:'Q':'symbol':'1.2-2' }}</td>
         </tr>
         <tr *ngIf="gastos.length === 0">
           <td colspan="4" class="empty-state">No hay gastos registrados.</td>

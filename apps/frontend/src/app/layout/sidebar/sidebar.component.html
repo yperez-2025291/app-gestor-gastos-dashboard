@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <div class="sidebar-nav">
-    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
       <span>Inicio</span>
     </a>
     <a routerLink="/mis-gastos" routerLinkActive="active" class="nav-item">
@@ -10,16 +10,18 @@
       <span>Presupuesto</span>
     </a>
     <a routerLink="/presupuesto-emergencia" routerLinkActive="active" class="nav-item">
-      <span>Presupuesto de emergencia</span>
+      <span>Presupuesto<br>de emergencia</span>
     </a>
     <a routerLink="/informe-gastos" routerLinkActive="active" class="nav-item">
-      <span>Informe de gastos</span>
+      <span>Informe de<br>gastos</span>
     </a>
   </div>
 
   <div class="sidebar-footer">
-    <button type="button" class="logout-btn" (click)="cerrarSesion()">
-      Cerrar Sesion
-    </button>
+    <app-button 
+      label="Cerrar Sesion" 
+      variant="secondary" 
+      (click)="cerrarSesion()">
+    </app-button>
   </div>
 </aside>
