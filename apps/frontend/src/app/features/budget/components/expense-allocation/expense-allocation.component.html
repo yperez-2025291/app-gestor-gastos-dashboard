@@ -1,0 +1,91 @@
+<div class="allocation-card">
+  <header class="card-header">
+    <h3>Asignación de Presupuesto</h3>
+    <span class="subtitle">Distribuye tu ingreso neto disponible en categorías</span>
+  </header>
+
+  <!-- Balance Visual de Asignación -->
+  <div class="balance-box" [ngClass]="{'negative': unallocatedAmount < 0}">
+    <div class="balance-item">
+      <span>Total Asignado:</span>
+      <strong>Q {{ totalAllocated | number:'1.2-2' }}</strong>
+    </div>
+    <div class="balance-item">
+      <span>Sin Asignar:</span>
+      <strong>Q {{ unallocatedAmount | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Reserva Fiscal -->
+  <div class="tax-reserve-box">
+    <div class="tax-info">
+      <span class="tax-title">Fondo de Reserva ISR (Facturas)</span>
+      <span class="tax-subtitle">Apartado automático de impuestos</span>
+    </div>
+    <div class="tax-action">
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="taxReserveApart" />
+        <span class="slider"></span>
+      </label>
+      <span class="tax-amount">Q {{ taxReserveAmount | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Formulario para Añadir Nueva Categoría -->
+  <div class="add-category-form">
+    <h4>Agregar Categoría</h4>
+    <div class="inputs-row">
+      <input 
+        type="text" 
+        placeholder="Nombre (ej. Salud)" 
+        [(ngModel)]="newCategoryName" 
+        class="text-input" 
+      />
+      <div class="input-currency small">
+        <span>Q</span>
+        <input 
+          type="number" 
+          placeholder="Límite" 
+          [(ngModel)]="newCategoryAmount" 
+        />
+      </div>
+      <app-button 
+        label="+" 
+        variant="secondary" 
+        (btnClick)="agregarCategoria()">
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Lista de Categorías Presupuestadas -->
+  <div class="categories-list">
+    <h4>Categorías Configuraradas</h4>
+    
+    <div *ngIf="categories.length === 0" class="empty-state">
+      No has configurado ninguna categoría de gasto aún.
+    </div>
+
+    <div *ngFor="let item of categories" class="category-item">
+      <span class="cat-name">{{ item.categoryName }}</span>
+      <div class="cat-controls">
+        <div class="input-currency small">
+          <span>Q</span>
+          <input type="number" [(ngModel)]="item.budgetedAmount" />
+        </div>
+        <button class="delete-btn" (click)="eliminarCategoria(item.id!)" title="Eliminar">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <app-button 
+      label="Guardar Presupuesto" 
+      variant="primary" 
+      (btnClick)="guardarPresupuesto()">
+    </app-button>
+  </div>
+</div>

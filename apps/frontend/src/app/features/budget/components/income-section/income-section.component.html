@@ -1,7 +1,7 @@
 <div class="income-card">
   <header class="card-header">
     <h3>Ingresos y Deducciones</h3>
-    <span class="subtitle">Ajusta manualmente tus valores del mes</span>
+    <span class="subtitle">Gestiona tus ingresos y crea tus propios impuestos</span>
   </header>
 
   <!-- Entradas de Ingreso -->
@@ -23,39 +23,80 @@
 
   <hr class="divider" />
 
-  <!-- Opciones de Retenciones e Impuestos -->
-  <div class="deductions-section">
-    <h4>Deducciones e Impuestos</h4>
+  <!-- Formulario para Crear Impuesto Personalizado -->
+  <div class="add-tax-section">
+    <h4>Crear Nuevo Impuesto / Retención</h4>
+    <div class="tax-form-grid">
+      <input 
+        type="text" 
+        placeholder="Nombre (ej. ISR, Reserva)" 
+        [(ngModel)]="newTaxName" 
+        class="text-input"
+      />
 
-    <label class="checkbox-label">
-      <input type="checkbox" [(ngModel)]="applyIsrInvoiced" />
-      <span>Apartar 5% ISR sobre Facturas (Q {{ isrReservation | number:'1.2-2' }})</span>
-    </label>
+      <div class="input-with-select">
+        <input 
+          type="number" 
+          placeholder="Valor" 
+          [(ngModel)]="newTaxValue" 
+          class="num-input"
+        />
+        <select [(ngModel)]="newTaxType" class="select-input">
+          <option value="percentage">%</option>
+          <option value="fixed">Q</option>
+        </select>
+      </div>
 
-    <label class="checkbox-label">
-      <input type="checkbox" [(ngModel)]="applyIgss" />
-      <span>Descuento IGSS 4.83% sueldo fijo (Q {{ igssDeduction | number:'1.2-2' }})</span>
-    </label>
+      <select [(ngModel)]="newTaxAppliesTo" class="select-input full">
+        <option value="invoiced">Aplica a: Facturas</option>
+        <option value="fixed">Aplica a: Sueldo Fijo</option>
+        <option value="total">Aplica a: Ingreso Total</option>
+      </select>
 
-    <div class="form-group inline-group">
-      <label for="manualIsr">Retención ISR Planilla (Monto directo)</label>
-      <div class="input-currency small">
-        <span>Q</span>
-        <input id="manualIsr" type="number" [(ngModel)]="manualIsrPlanilla" placeholder="0.00" />
+      <app-button 
+        label="Agregar Impuesto" 
+        variant="secondary" 
+        (btnClick)="agregarImpuesto()">
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Lista de Impuestos Creados -->
+  <div class="taxes-list">
+    <h4>Impuestos y Deducciones Activas</h4>
+
+    <div *ngIf="customTaxes.length === 0" class="empty-state">
+      No has creado ningún impuesto o retención todavía.
+    </div>
+
+    <div *ngFor="let tax of customTaxes" class="tax-item">
+      <div class="tax-info">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="tax.active" />
+          <span class="tax-name">{{ tax.name }}</span>
+        </label>
+        <span class="tax-details">
+          ({{ tax.value }}{{ tax.type === 'percentage' ? '%' : ' Q' }} sobre {{ tax.appliesTo === 'invoiced' ? 'facturas' : (tax.appliesTo === 'fixed' ? 'sueldo fijo' : 'total') }})
+        </span>
+      </div>
+
+      <div class="tax-action">
+        <strong class="tax-calc">- Q {{ calculateTaxAmount(tax) | number:'1.2-2' }}</strong>
+        <button class="delete-btn" (click)="eliminarImpuesto(tax.id)" title="Eliminar">✕</button>
       </div>
     </div>
   </div>
 
   <hr class="divider" />
 
-  <!-- Resumen de Calculo Liquido -->
+  <!-- Resumen de Cálculo Líquido -->
   <div class="summary-box">
     <div class="summary-row">
       <span>Ingreso Bruto Total:</span>
       <strong>Q {{ totalGrossIncome | number:'1.2-2' }}</strong>
     </div>
     <div class="summary-row deduction">
-      <span>Total Deducciones/Reservas:</span>
+      <span>Total Impuestos/Deducciones:</span>
       <strong>- Q {{ totalDeductions | number:'1.2-2' }}</strong>
     </div>
     <div class="summary-row net">
@@ -66,7 +107,7 @@
 
   <div class="card-footer">
     <app-button 
-      label="Guardar Ingresos" 
+      label="Guardar Configuración" 
       variant="primary" 
       (btnClick)="guardarConfiguracion()">
     </app-button>
