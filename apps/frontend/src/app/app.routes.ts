@@ -3,6 +3,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { DashboardPageComponent } from './features/dashboard/pages/dashboard-page/dashboard-page.component';
+import { BudgetComponent } from './features/budget/budget.component';
 
 export const routes: Routes = [
   // Rutas públicas
@@ -15,6 +16,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardPageComponent },
+      { path: 'presupuesto', component: BudgetComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

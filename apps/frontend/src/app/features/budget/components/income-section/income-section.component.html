@@ -1,0 +1,74 @@
+<div class="income-card">
+  <header class="card-header">
+    <h3>Ingresos y Deducciones</h3>
+    <span class="subtitle">Ajusta manualmente tus valores del mes</span>
+  </header>
+
+  <!-- Entradas de Ingreso -->
+  <div class="form-group">
+    <label for="fixedSalary">Sueldo Fijo (Sin Facturar)</label>
+    <div class="input-currency">
+      <span>Q</span>
+      <input id="fixedSalary" type="number" [(ngModel)]="fixedSalary" placeholder="0.00" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="invoicedIncome">Ingresos Facturados (Horas / Servicios)</label>
+    <div class="input-currency">
+      <span>Q</span>
+      <input id="invoicedIncome" type="number" [(ngModel)]="invoicedIncome" placeholder="0.00" />
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Opciones de Retenciones e Impuestos -->
+  <div class="deductions-section">
+    <h4>Deducciones e Impuestos</h4>
+
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="applyIsrInvoiced" />
+      <span>Apartar 5% ISR sobre Facturas (Q {{ isrReservation | number:'1.2-2' }})</span>
+    </label>
+
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="applyIgss" />
+      <span>Descuento IGSS 4.83% sueldo fijo (Q {{ igssDeduction | number:'1.2-2' }})</span>
+    </label>
+
+    <div class="form-group inline-group">
+      <label for="manualIsr">Retención ISR Planilla (Monto directo)</label>
+      <div class="input-currency small">
+        <span>Q</span>
+        <input id="manualIsr" type="number" [(ngModel)]="manualIsrPlanilla" placeholder="0.00" />
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Resumen de Calculo Liquido -->
+  <div class="summary-box">
+    <div class="summary-row">
+      <span>Ingreso Bruto Total:</span>
+      <strong>Q {{ totalGrossIncome | number:'1.2-2' }}</strong>
+    </div>
+    <div class="summary-row deduction">
+      <span>Total Deducciones/Reservas:</span>
+      <strong>- Q {{ totalDeductions | number:'1.2-2' }}</strong>
+    </div>
+    <div class="summary-row net">
+      <span>Ingreso Neto Disponible:</span>
+      <strong>Q {{ netAvailableIncome | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <app-button 
+      label="Guardar Ingresos" 
+      variant="primary" 
+      (btnClick)="guardarConfiguracion()">
+    </app-button>
+  </div>
+</div>
