@@ -7,8 +7,8 @@ import { ExpenseAllocationComponent } from './components/expense-allocation/expe
   selector: 'app-budget',
   standalone: true,
   imports: [
-    CommonModule,
-    IncomeSectionComponent,
+    CommonModule, 
+    IncomeSectionComponent, 
     ExpenseAllocationComponent
   ],
   templateUrl: './budget.component.html',

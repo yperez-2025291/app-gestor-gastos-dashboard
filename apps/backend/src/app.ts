@@ -2,14 +2,13 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { prisma } from './database/prisma.service.js';
 import usersRoutes from './modules/users/users.router.js';
+import budgetRoutes from './modules/budget/budget.router.js'; // Importar rutas de budget
 
 const app: Application = express();
 
-// Middlewares globales
 app.use(cors());
 app.use(express.json());
 
-// Endpoint de prueba (Health Check + DB Check)
 app.get('/api/health', async (_req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -30,5 +29,6 @@ app.get('/api/health', async (_req: Request, res: Response) => {
 
 // Rutas de Módulos
 app.use('/api/users', usersRoutes);
+app.use('/api/budget', budgetRoutes); // Registrar ruta /api/budget
 
 export default app;

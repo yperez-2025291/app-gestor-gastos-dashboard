@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service'; // Inyectar servicio
 
 @Component({
   selector: 'app-register',
@@ -16,8 +17,10 @@ export class RegisterComponent {
   password: string = '';
   confirmPassword: string = '';
   acceptTerms: boolean = false;
+  isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   onRegister(): void {
     if (!this.fullName || !this.email || !this.password) {
@@ -35,7 +38,24 @@ export class RegisterComponent {
       return;
     }
 
-    // Redirige al inicio de sesión tras completar el registro
-    this.router.navigate(['/login']);
+    this.isLoading = true;
+
+    // Conexión con el Backend vía HTTP POST
+    this.authService.register({
+      name: this.fullName,
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        alert('¡Usuario registrado exitosamente!');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error al registrar usuario:', err);
+        alert(err.error?.message || 'Error al intentar registrar el usuario');
+      }
+    });
   }
 }

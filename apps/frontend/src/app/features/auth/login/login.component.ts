@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,22 +15,41 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   rememberMe: boolean = false;
+  isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private ngZone = inject(NgZone);
 
-  onLogin(): void {
-    // 1. Simular guardado de token de sesión
-    const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5OTk5OTk5OTl9.signature';
-    localStorage.setItem('token', dummyToken);
+  onLogin(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
 
-    // 2. Redirigir explícitamente hacia el dashboard
-    this.router.navigateByUrl('/dashboard');
+    if (!this.email || !this.password) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.authService.login({
+      email: this.email.trim(),
+      password: this.password
+    }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.ngZone.run(() => {
+          this.router.navigate(['/dashboard']);
+        });
+      },
+      error: () => {
+        this.isLoading = false;
+        alert('Credenciales incorrectas. Por favor verifica tus datos.');
+      }
+    });
   }
 
   onGoogleLogin(): void {
-    const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5OTk5OTk5OTl9.signature';
-    localStorage.setItem('token', dummyToken);
-    
-    this.router.navigateByUrl('/dashboard');
+    // Método reservado para integración futura
   }
 }

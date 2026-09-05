@@ -49,10 +49,17 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response) => {
-        if (response.data.token) {
-          this.tokenStorage.saveToken(response.data.token);
-          this.tokenStorage.saveUser(response.data.user);
+      tap((response: any) => {
+        // Extrae el token independientemente de la envolvente del backend
+        const token = response.data?.token || response.token;
+        if (token) {
+          this.tokenStorage.saveToken(token);
+        }
+
+        // Extrae la entidad del usuario para persistir la sesión
+        const user = response.data?.user || response.user || response.data;
+        if (user && typeof user === 'object') {
+          this.tokenStorage.saveUser(user);
         }
       })
     );
@@ -64,10 +71,14 @@ export class AuthService {
 
   refreshToken(): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/refresh-token`, {}).pipe(
-      tap((response) => {
-        if (response.data.token) {
-          this.tokenStorage.saveToken(response.data.token);
-          this.tokenStorage.saveUser(response.data.user);
+      tap((response: any) => {
+        const token = response.data?.token || response.token;
+        if (token) {
+          this.tokenStorage.saveToken(token);
+        }
+        const user = response.data?.user || response.user || response.data;
+        if (user && typeof user === 'object') {
+          this.tokenStorage.saveUser(user);
         }
       })
     );

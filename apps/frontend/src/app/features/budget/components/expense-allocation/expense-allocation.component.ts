@@ -1,39 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CategoryBudget } from '../../../../core/models/budget.model';
+import { BudgetService } from '../../../../core/services/budget.service';
 
 @Component({
   selector: 'app-expense-allocation',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent],
-  templateUrl: './expense-allocation.component.html',
+  templateUrl: './expense-allocation.component.html', // <--- CORREGIDO AQUÍ
   styleUrl: './expense-allocation.component.css'
 })
-export class ExpenseAllocationComponent {
-  // Referencia visual de dinero disponible para presupuestar (por defecto estimado)
-  netAvailableIncome: number = 23770.40;
+export class ExpenseAllocationComponent implements OnInit {
+  private budgetService = inject(BudgetService);
 
-  // Lista inicial de categorías
-  categories: CategoryBudget[] = [
-    { id: '1', categoryName: 'Alimentación', budgetedAmount: 3500 },
-    { id: '2', categoryName: 'Vivienda y Servicios', budgetedAmount: 4500 },
-    { id: '3', categoryName: 'Transporte', budgetedAmount: 1500 },
-    { id: '4', categoryName: 'Ahorro / Personal', budgetedAmount: 2000 }
-  ];
+  netAvailableIncome: number = 0;
+  categories: CategoryBudget[] = [];
 
-  // Reserva de impuestos (los Q650 de facturas)
-  taxReserveAmount: number = 650;
+  taxReserveAmount: number = 0;
   taxReserveApart: boolean = true;
 
-  // Formulario para nueva categoría
   newCategoryName: string = '';
   newCategoryAmount: number | null = null;
 
-  // Cálculos dinámicos
+  ngOnInit(): void {
+    this.budgetService.budget$.subscribe((data) => {
+      if (!data) return;
+
+      const budget = data.budget || data;
+      const salary = Number(budget.fixedSalary) || 0;
+      const invoiced = Number(budget.invoicedIncome) || 0;
+      const totalIncome = salary + invoiced;
+
+      let deductions = 0;
+      if (Array.isArray(data.taxes)) {
+        deductions = data.taxes.reduce((sum: number, tax: any) => {
+          if (!tax.active) return sum;
+          let base = tax.appliesTo === 'FIXED' ? salary : (tax.appliesTo === 'INVOICED' ? invoiced : totalIncome);
+          let val = tax.type === 'PERCENTAGE' ? base * (Number(tax.value) / 100) : Number(tax.value);
+          return sum + val;
+        }, 0);
+      }
+
+      this.netAvailableIncome = Math.max(0, totalIncome - deductions);
+      this.taxReserveAmount = deductions;
+      if (data.categories) {
+        this.categories = data.categories;
+      }
+    });
+  }
+
   get totalCategoriesBudgeted(): number {
-    return this.categories.reduce((acc, cat) => acc + (cat.budgetedAmount || 0), 0);
+    return this.categories.reduce((acc, cat) => acc + (Number(cat.budgetedAmount) || 0), 0);
   }
 
   get totalAllocated(): number {
@@ -50,7 +69,7 @@ export class ExpenseAllocationComponent {
       this.categories.push({
         id: Date.now().toString(),
         categoryName: this.newCategoryName.trim(),
-        budgetedAmount: this.newCategoryAmount
+        budgetedAmount: Number(this.newCategoryAmount)
       });
       this.newCategoryName = '';
       this.newCategoryAmount = null;

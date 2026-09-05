@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef, NgZone, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SessionExpiredModalComponent } from '../../shared/components/session-expired-modal/session-expired-modal.component';
+import { TokenStorageService } from '../../core/services/token-storage.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -15,8 +16,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   showSessionModal: boolean = false;
   private timer: any;
 
-  // (120,000)
+  // Limite de inactividad de 2 minutos (120,000 ms)
   private readonly INACTIVITY_LIMIT_MS = 120000;
+
+  private tokenStorage = inject(TokenStorageService);
 
   constructor(
     private router: Router,
@@ -32,7 +35,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.clearTimer();
   }
 
-  // Detectar actividad del usuario (mouse, teclado, clicks) para reiniciar los 2 minutos
+  // Detectar actividad del usuario (mouse, teclado, clicks) para reiniciar el temporizador
   @HostListener('window:mousemove')
   @HostListener('window:keydown')
   @HostListener('window:click')
@@ -45,7 +48,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   private startInactivityTimer(): void {
     this.clearTimer();
 
-    const token = localStorage.getItem('token');
+    // Obtener el token correcto usando el TokenStorageService (clave 'auth_token')
+    const token = this.tokenStorage.getToken();
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -53,7 +57,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
     let timeToWait = this.INACTIVITY_LIMIT_MS;
 
-    // Intentar decodificar el token JWT para obtener exp si existe
+    // Decodificar JWT para obtener expiración real si existe
     try {
       const payloadBase64 = token.split('.')[1];
       if (payloadBase64) {
@@ -62,7 +66,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
           const expTime = decodedPayload.exp * 1000;
           const timeRemaining = expTime - Date.now();
 
-          // Si el token expira antes de los 2 minutos, usamos el tiempo restante del token
           if (timeRemaining > 0 && timeRemaining < this.INACTIVITY_LIMIT_MS) {
             timeToWait = timeRemaining;
           } else if (timeRemaining <= 0) {
@@ -72,7 +75,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
         }
       }
     } catch (e) {
-      // Si el token no es un JWT válido (dummy), se mantiene el temporizador de 2 min por inactividad
+      // Si ocurre un error al decodificar, mantiene el temporizador predeterminado de 2 min
     }
 
     // Programar la apertura del modal al cumplirse el tiempo
@@ -96,13 +99,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   handleLoginAgain(): void {
     this.showSessionModal = false;
-    localStorage.removeItem('token');
+    this.tokenStorage.clear();
     this.router.navigate(['/login']);
   }
 
   handleCancel(): void {
     this.showSessionModal = false;
-    localStorage.removeItem('token');
+    this.tokenStorage.clear();
     this.router.navigate(['/login']);
   }
 }

@@ -12,28 +12,42 @@ enum Role {
   USER
 }
 
+enum DeductionType {
+  PERCENTAGE
+  FIXED
+}
+
+enum AppliesTo {
+  FIXED
+  INVOICED
+  TOTAL
+}
+
 model User {
-  id         String     @id @default(uuid())
-  email      String     @unique
-  password   String
-  name       String
-  role       Role       @default(USER)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  categories Category[]
-  expenses   Expense[]
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  categories    Category[]
+  expenses      Expense[]
+  budgets       Budget[]
+  taxDeductions TaxDeduction[]
 
   @@map("users")
 }
 
 model Category {
-  id        String    @id @default(uuid())
-  name      String
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenses  Expense[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id             String         @id @default(uuid())
+  name           String
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses       Expense[]
+  categoryBudgets CategoryBudget[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@unique([name, userId])
   @@map("categories")
@@ -53,4 +67,49 @@ model Expense {
   updatedAt   DateTime @updatedAt
 
   @@map("expenses")
+}
+
+model Budget {
+  id             String           @id @default(uuid())
+  fixedSalary    Float            @default(0)
+  invoicedIncome Float            @default(0)
+  month          Int
+  year           Int
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocations    CategoryBudget[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([userId, month, year])
+  @@map("budgets")
+}
+
+model TaxDeduction {
+  id        String        @id @default(uuid())
+  name      String
+  type      DeductionType @default(PERCENTAGE)
+  value     Float
+  appliesTo AppliesTo     @default(INVOICED)
+  active    Boolean       @default(true)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("tax_deductions")
+}
+
+model CategoryBudget {
+  id             String   @id @default(uuid())
+  budgetedAmount Float
+  budgetId       String
+  budget         Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([budgetId, categoryId])
+  @@map("category_budgets")
 }

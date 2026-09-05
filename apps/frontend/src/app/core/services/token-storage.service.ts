@@ -16,16 +16,23 @@ export class TokenStorageService {
   }
 
   saveUser(user: any): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    if (user) {
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    }
   }
 
   getUser(): any | null {
     const user = localStorage.getItem(this.USER_KEY);
-    return user ? JSON.parse(user) : null;
+    try {
+      return user ? JSON.parse(user) : null;
+    } catch (e) {
+      return null;
+    }
   }
 
   clear(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem('token');
   }
 }

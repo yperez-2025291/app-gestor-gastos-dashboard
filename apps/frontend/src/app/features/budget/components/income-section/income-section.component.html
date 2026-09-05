@@ -9,7 +9,14 @@
     <label for="fixedSalary">Sueldo Fijo (Sin Facturar)</label>
     <div class="input-currency">
       <span>Q</span>
-      <input id="fixedSalary" type="number" [(ngModel)]="fixedSalary" placeholder="0.00" />
+      <input 
+        id="fixedSalary" 
+        type="number" 
+        min="0" 
+        [value]="fixedSalary" 
+        (input)="onInputSueldo($event)" 
+        placeholder="0.00" 
+      />
     </div>
   </div>
 
@@ -17,7 +24,14 @@
     <label for="invoicedIncome">Ingresos Facturados (Horas / Servicios)</label>
     <div class="input-currency">
       <span>Q</span>
-      <input id="invoicedIncome" type="number" [(ngModel)]="invoicedIncome" placeholder="0.00" />
+      <input 
+        id="invoicedIncome" 
+        type="number" 
+        min="0" 
+        [value]="invoicedIncome" 
+        (input)="onInputFacturado($event)" 
+        placeholder="0.00" 
+      />
     </div>
   </div>
 
@@ -37,6 +51,7 @@
       <div class="input-with-select">
         <input 
           type="number" 
+          min="0"
           placeholder="Valor" 
           [(ngModel)]="newTaxValue" 
           class="num-input"

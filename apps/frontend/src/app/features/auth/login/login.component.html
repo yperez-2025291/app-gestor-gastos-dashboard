@@ -6,7 +6,7 @@
         <p>Por favor ingresa tus credenciales para acceder</p>
       </div>
 
-      <div class="login-form">
+      <form (ngSubmit)="onLogin($event)" #loginForm="ngForm" class="login-form">
         <div class="form-group">
           <label for="email">Correo Electrónico</label>
           <input 
@@ -15,6 +15,7 @@
             [(ngModel)]="email" 
             name="email" 
             placeholder="ejemplo@correo.com" 
+            required
           />
         </div>
 
@@ -26,7 +27,7 @@
             [(ngModel)]="password" 
             name="password" 
             placeholder="••••••••" 
-            (keyup.enter)="onLogin()"
+            required
           />
         </div>
 
@@ -39,8 +40,8 @@
         </div>
 
         <div class="actions">
-          <button type="button" class="btn-primary" (click)="onLogin()">
-            Iniciar Sesión
+          <button type="submit" class="btn-primary" [disabled]="isLoading">
+            {{ isLoading ? 'Iniciando Sesión...' : 'Iniciar Sesión' }}
           </button>
 
           <button type="button" class="btn-google" (click)="onGoogleLogin()">
@@ -53,7 +54,7 @@
             Iniciar sesión con Google
           </button>
         </div>
-      </div>
+      </form>
 
       <div class="signup-prompt">
         <span>¿No tienes una cuenta? </span>
